@@ -59,4 +59,4 @@ def serialize_albums(albums: List[Album], filename: str):
         writer = csv.writer(output_file, delimiter=",", quotechar='"', quoting=csv.QUOTE_NONNUMERIC)
         for album in albums:
             writer.writerow([album.artists[0].name, album.name, album.release_date, album.album_type, album.label,
-                             album.added_at, album.id])
+                             album.id])
