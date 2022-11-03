@@ -60,3 +60,35 @@ def serialize_albums(albums: List[Album], filename: str):
         for album in albums:
             writer.writerow([album.artists[0].name, album.name, album.release_date, album.album_type, album.label,
                              album.id])
+
+def deserialize_albums(filename: str) -> List[Album]:
+    result = []
+    with open(filename, "r") as input_file:
+        reader = csv.reader(input_file, delimiter=",", quotechar='"', quoting=csv.QUOTE_NONNUMERIC)
+        for row in reader:
+            album = Album(
+                id=row[5],
+                name=row[1],
+                label=row[4],
+                album_type=row[3],
+                release_date=row[2],
+                artists=[row[0]],  # TODO: fix me
+                added_at="",
+            )
+            result.append(album)
+        result = sorted(result, key=lambda item: item.release_date, reverse=False)
+        return result
+
+
+def delete_albums(client: Spotify, albums: List[Album]):
+    ids = [album.id for album in albums]
+    for i in range(0, len(ids), 10):
+        current_ids = ids[i:i+10]
+        client.current_user_saved_albums_delete(current_ids)
+
+
+def add_albums(client: Spotify, albums: List[Album]):
+    ids = [album.id for album in albums]
+    for i in range(0, len(ids), 5):
+        current_ids = ids[i:i+5]
+        client.current_user_saved_albums_add(current_ids)
