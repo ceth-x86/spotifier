@@ -1,6 +1,8 @@
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 
+from concepts.playlists import serialize_playlists
+from concepts.playlists import selected_playlists
 from concepts.albums import saved_albums
 from concepts.albums import delete_albums
 from concepts.albums import deserialize_albums
@@ -11,23 +13,26 @@ from concepts.artits import serialize_artists
 from concepts.tracks import saved_tracks
 from concepts.tracks import serialize_tracks
 
-scope = "user-library-read,user-library-modify,user-follow-read"
+scope = "user-library-read,user-library-modify,user-follow-read,playlist-read-private"
 
 
 def backup():
     client = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope))
 
-    artists, artist_count = favourite_artists(client)
-    print("Artists count:", artist_count)
-    serialize_artists(artists, "data/artists.csv")
+    playlists, playlist_count = selected_playlists(client)
+    serialize_playlists(playlists, "data/playlists.csv")
 
-    albums, albums_count = saved_albums(client)
-    print("Albums count:", albums_count)
-    serialize_albums(albums, "data/albums.csv")
+#    artists, artist_count = favourite_artists(client)
+#    print("Artists count:", artist_count)
+#    serialize_artists(artists, "data/artists.csv")
 
-    tracks, track_count = saved_tracks(client)
-    print("Track count:", track_count)
-    serialize_tracks(tracks, "data/tracks.csv")
+ #   albums, albums_count = saved_albums(client)
+ #   print("Albums count:", albums_count)
+ #   serialize_albums(albums, "data/albums.csv")
+
+  #  tracks, track_count = saved_tracks(client)
+  #  print("Track count:", track_count)
+  #  serialize_tracks(tracks, "data/tracks.csv")
 
 
 def reload_albums():
